@@ -13,13 +13,30 @@ document.getElementById('purchase-form').addEventListener('submit', function(e) 
         return;
     }
 
-    // هنا نقوم بتمثيل عملية الإرسال بنجاح
+    // إرسال البيانات إلى الخادم (Backend)
     const btn = e.target.querySelector('button');
+    const originalText = btn.innerHTML;
     btn.innerHTML = "جاري الحفظ...";
     btn.disabled = true;
 
-    // محاكاة الانتقال لصفحة الشكر بعد 1.5 ثانية
-    setTimeout(() => {
-        window.location.href = "thankyou.html";
-    }, 1500);
+    fetch('/api/orders', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, phone, city })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            window.location.href = "thankyou.html";
+        } else {
+            alert(data.error || "حدث خطأ أثناء التسجيل");
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+        }
+    })
+    .catch(err => {
+        alert("تعذر الاتصال بالخادم، المرجو المحاولة لاحقاً");
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+    });
 });
