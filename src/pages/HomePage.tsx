@@ -15,11 +15,11 @@ export default function HomePage() {
         <div className="absolute top-0 right-0 -mr-20 -mt-20 w-64 h-64 rounded-full bg-orange-200 opacity-50 blur-3xl"></div>
         <div className="absolute bottom-0 left-0 -ml-20 -mb-20 w-80 h-80 rounded-full bg-emerald-200 opacity-50 blur-3xl"></div>
 
-        <div className="container mx-auto px-4 max-w-6xl relative z-10">
-          <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
+        <div className="container mx-auto px-4 lg:px-8 max-w-7xl relative z-10 w-full">
+          <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
             
             {/* Text Content */}
-            <div className="flex-1 text-center lg:text-start lg:rtl:text-right lg:ltr:text-left">
+            <div className="lg:w-5/12 text-center lg:text-start lg:rtl:text-right lg:ltr:text-left shrink-0">
               <h1 className="text-4xl lg:text-6xl xl:text-7xl font-black text-emerald-900 mb-6 leading-tight">
                 {t("home.hero.title")} <br/>
                 <span className="text-orange-500 inline-block mt-2">{t("home.hero.highlight")}</span>
@@ -33,16 +33,16 @@ export default function HomePage() {
             </div>
 
             {/* Image */}
-            <div className="flex-1 relative w-full max-w-md lg:max-w-full mx-auto">
+            <div className="lg:w-7/12 relative w-full mx-auto">
                <div className="absolute inset-0 bg-gradient-to-tr from-emerald-400 to-orange-400 blur-3xl opacity-20 rounded-full"></div>
                <img 
-                 src="https://images.unsplash.com/photo-1607082349566-187342175e2f?w=1000&auto=format&fit=crop&q=80" 
+                 src="https://images.unsplash.com/photo-1607082349566-187342175e2f?w=1400&auto=format&fit=crop&q=80" 
                  alt="Modern E-commerce" 
-                 className="relative z-10 w-full rounded-3xl shadow-2xl border-8 border-white transform hover:scale-[1.02] hover:-rotate-2 transition duration-500 object-cover aspect-square lg:aspect-[4/3]" 
+                 className="relative z-10 w-full rounded-3xl shadow-2xl border-8 border-white transform hover:scale-[1.02] transition duration-500 object-cover h-[400px] sm:h-[500px] lg:h-[600px]" 
                />
                
                {/* Floating Badge */}
-               <div className="absolute -left-6 bottom-10 bg-white p-4 rounded-2xl shadow-xl z-20 flex items-center gap-4 animate-bounce rtl:right-10 rtl:left-auto ltr:right-auto ltr:left-10" style={{ animationDuration: '3s' }}>
+               <div className="absolute -left-6 bottom-16 bg-white p-4 rounded-2xl shadow-xl z-20 flex items-center gap-4 animate-bounce rtl:right-10 rtl:left-auto ltr:right-auto ltr:left-10" style={{ animationDuration: '3s' }}>
                   <div className="bg-emerald-100 p-3 rounded-full text-emerald-600">
                     <ShieldCheck className="w-8 h-8" />
                   </div>
