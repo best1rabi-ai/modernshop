@@ -196,7 +196,6 @@ export default function AdminPage() {
           )}
 
           {(activeTab === 'overview' || activeTab === 'orders') && (
-              {/* Orders Table */}
               <div className="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
                  <div className="p-6 border-b border-gray-100 flex flex-wrap gap-4 justify-between items-center bg-gray-50/50">
                      <h2 className="text-xl font-black text-gray-900 flex items-center gap-2">
