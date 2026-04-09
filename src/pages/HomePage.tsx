@@ -9,52 +9,34 @@ export default function HomePage() {
 
   return (
     <div className="pb-20 bg-gray-50">
-      {/* Hero Section */}
-      <section className="bg-emerald-50 pt-12 pb-20 lg:pt-20 lg:pb-32 border-b border-emerald-100 overflow-hidden relative">
-        {/* Background elements */}
-        <div className="absolute top-0 right-0 -mr-20 -mt-20 w-64 h-64 rounded-full bg-orange-200 opacity-50 blur-3xl"></div>
-        <div className="absolute bottom-0 left-0 -ml-20 -mb-20 w-80 h-80 rounded-full bg-emerald-200 opacity-50 blur-3xl"></div>
-
-        <div className="container mx-auto px-4 lg:px-8 max-w-7xl relative z-10 w-full">
-          <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
-            
-            {/* Text Content */}
-            <div className="lg:w-5/12 text-center lg:text-start lg:rtl:text-right lg:ltr:text-left shrink-0">
-              <h1 className="text-4xl lg:text-6xl xl:text-7xl font-black text-emerald-900 mb-6 leading-tight">
-                {t("home.hero.title")} <br/>
-                <span className="text-orange-500 inline-block mt-2">{t("home.hero.highlight")}</span>
-              </h1>
-              <p className="text-lg text-gray-600 mb-10 max-w-xl mx-auto lg:mx-0 leading-relaxed">
-                {t("home.hero.desc")}
-              </p>
-              <a href="#products" className="inline-block bg-orange-500 text-white px-10 py-5 rounded-full text-xl font-bold shadow-xl shadow-orange-500/30 hover:bg-orange-600 hover:-translate-y-1 transition-all duration-300">
-                {t("home.hero.btn")}
-              </a>
-            </div>
-
-            {/* Image */}
-            <div className="lg:w-7/12 relative w-full mx-auto">
-               <div className="absolute inset-0 bg-gradient-to-tr from-emerald-400 to-orange-400 blur-3xl opacity-20 rounded-full"></div>
-               <img 
-                 src="https://images.unsplash.com/photo-1607082349566-187342175e2f?w=1400&auto=format&fit=crop&q=80" 
-                 alt="Modern E-commerce" 
-                 className="relative z-10 w-full rounded-3xl shadow-2xl border-8 border-white transform hover:scale-[1.02] transition duration-500 object-cover h-[400px] sm:h-[500px] lg:h-[600px]" 
-               />
-               
-               {/* Floating Badge */}
-               <div className="absolute -left-6 bottom-16 bg-white p-4 rounded-2xl shadow-xl z-20 flex items-center gap-4 animate-bounce rtl:right-10 rtl:left-auto ltr:right-auto ltr:left-10" style={{ animationDuration: '3s' }}>
-                  <div className="bg-emerald-100 p-3 rounded-full text-emerald-600">
-                    <ShieldCheck className="w-8 h-8" />
-                  </div>
-                  <div>
-                      <div className="font-black text-gray-900">تسوق آمن</div>
-                      <div className="text-xs text-gray-500">مضمون 100%</div>
-                  </div>
-               </div>
-            </div>
-            
-          </div>
+      {/* Hero Section with Full Background Image */}
+      <section className="relative pt-24 pb-32 lg:pt-32 lg:pb-40 border-b border-emerald-100 overflow-hidden">
+        {/* Background Image & Overlay */}
+        <div className="absolute inset-0 z-0">
+          <img 
+            src="https://images.unsplash.com/photo-1607082349566-187342175e2f?w=1600&auto=format&fit=crop&q=80" 
+            alt="Hero Background" 
+            className="w-full h-full object-cover"
+          />
+          {/* Dark Overlay so text is readable */}
+          <div className="absolute inset-0 bg-emerald-950/70"></div>
         </div>
+
+        <div className="container mx-auto px-4 max-w-5xl relative z-10 text-center">
+          <h1 className="text-4xl lg:text-6xl xl:text-7xl font-black text-white mb-6 leading-tight drop-shadow-lg">
+            {t("home.hero.title")} <br/>
+            <span className="text-orange-500 inline-block mt-2 drop-shadow-lg">{t("home.hero.highlight")}</span>
+          </h1>
+          <p className="text-xl text-emerald-50 max-w-2xl mx-auto mb-12 leading-relaxed drop-shadow-md font-medium">
+            {t("home.hero.desc")}
+          </p>
+          <a href="#products" className="inline-block bg-orange-500 text-white px-12 py-5 rounded-full text-2xl font-black shadow-2xl shadow-orange-500/50 hover:bg-orange-600 hover:-translate-y-2 hover:scale-105 transition-all duration-300">
+            {t("home.hero.btn")}
+          </a>
+        </div>
+        
+        {/* Decorative fade at the bottom */}
+        <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-gray-50 to-transparent z-10"></div>
       </section>
 
       {/* Trust Features */}
