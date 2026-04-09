@@ -1,15 +1,40 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { ShieldCheck, Truck, ArrowRight, MessageCircle } from 'lucide-react';
-import { DUMMY_PRODUCTS } from '../data/dummy';
+import { ShieldCheck, Truck, ArrowRight, MessageCircle, RefreshCw } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 export default function ProductDetailsPage() {
   const { t } = useTranslation();
   const { id } = useParams();
-  const product = DUMMY_PRODUCTS.find(p => p.id === Number(id)) || DUMMY_PRODUCTS[0];
-  const [activeImage, setActiveImage] = useState(product.gallery[0] || product.image);
+  
+  const [product, setProduct] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
   const [quantity, setQuantity] = useState(1);
+
+  useEffect(() => {
+      fetch('/api/products').then(res=>res.json()).then(list=> {
+          const found = list.find((p:any) => p.id === Number(id));
+          setProduct(found);
+          setLoading(false);
+      }).catch(() => setLoading(false));
+  }, [id]);
+
+  if (loading) {
+      return (
+          <div className="min-h-screen flex items-center justify-center bg-gray-50">
+              <RefreshCw className="w-10 h-10 animate-spin text-emerald-500" />
+          </div>
+      );
+  }
+
+  if (!product) {
+      return (
+          <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 text-center">
+              <h1 className="text-3xl font-bold mb-4 text-gray-900">المنتج غير موجود</h1>
+              <Link to="/" className="text-emerald-600 font-bold hover:underline">العودة للرئيسية</Link>
+          </div>
+      );
+  }
 
   return (
     <div className="bg-gray-50 pb-24">
@@ -25,21 +50,15 @@ export default function ProductDetailsPage() {
         <div className="bg-white rounded-3xl shadow-sm border border-gray-100 p-4 md:p-8 grid grid-cols-1 md:grid-cols-2 gap-10">
           <div className="flex flex-col gap-4">
             <div className="aspect-square bg-gray-100 rounded-2xl overflow-hidden shadow-sm relative">
-                <img src={activeImage} alt={product.name} className="w-full h-full object-cover" />
+                <img src={product.image_url || 'https://via.placeholder.com/600'} alt={product.name} className="w-full h-full object-cover" />
                 <div className="absolute top-4 right-4 bg-orange-500 text-white font-bold px-3 py-1 rounded-lg">
                     {t("product.discount")}
                 </div>
             </div>
             <div className="flex gap-4 overflow-x-auto pb-2">
-              {product.gallery.map((img, i) => (
-                <button 
-                    key={i} 
-                    onClick={() => setActiveImage(img)}
-                    className={`w-20 h-20 rounded-xl overflow-hidden border-2 flex-shrink-0 transition-all ${activeImage === img ? 'border-emerald-500 scale-105' : 'border-transparent opacity-70 hover:opacity-100'}`}
-                >
-                  <img src={img} className="w-full h-full object-cover" />
+                <button className="w-20 h-20 rounded-xl overflow-hidden border-2 border-emerald-500 flex-shrink-0 transition-all">
+                  <img src={product.image_url || 'https://via.placeholder.com/150'} className="w-full h-full object-cover" />
                 </button>
-              ))}
             </div>
           </div>
 
@@ -49,21 +68,19 @@ export default function ProductDetailsPage() {
             <div className="flex flex-wrap items-center gap-4 mb-6 pb-6 border-b border-gray-100">
               <div className="flex items-center gap-2">
                 <span className="text-3xl font-black text-emerald-600">{product.price} {t("product.currency")}</span>
-                <span className="text-lg text-gray-400 line-through">{product.originalPrice} {t("product.currency")}</span>
+                <span className="text-lg text-gray-400 line-through">{(product.price * 1.5).toFixed(0)} {t("product.currency")}</span>
               </div>
             </div>
 
-            <p className="text-gray-600 mb-8 leading-relaxed">
-              {product.description}
+            <p className="text-gray-600 mb-8 leading-relaxed whitespace-pre-wrap">
+              {product.description || "لا يوجد وصف تفصيلي لهذا المنتج بعد."}
             </p>
 
             <ul className="space-y-3 mb-8 bg-emerald-50 p-6 rounded-2xl">
-              {product.features.map((feature, i) => (
-                <li key={i} className="flex items-start gap-3">
+                <li className="flex items-start gap-3">
                   <ShieldCheck className="w-5 h-5 text-emerald-600 flex-shrink-0 mt-0.5" />
-                  <span className="text-gray-800">{feature}</span>
+                  <span className="text-gray-800">منتج أصلي ذو جودة عالية ومضمونة.</span>
                 </li>
-              ))}
             </ul>
 
             <div className="flex items-center gap-4 mb-8">

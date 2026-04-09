@@ -1,11 +1,26 @@
-import React from 'react';
-import { ShieldCheck, Truck, HeadphonesIcon, RefreshCw } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { ShieldCheck, Truck, HeadphonesIcon, RefreshCw, Package } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { DUMMY_PRODUCTS } from '../data/dummy';
 import { useTranslation } from 'react-i18next';
 
 export default function HomePage() {
   const { t } = useTranslation();
+  const [products, setProducts] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const res = await fetch('/api/products');
+        const data = await res.json();
+        setProducts(data);
+      } catch (e) {
+        console.error("Failed to fetch products", e);
+      }
+      setLoading(false);
+    };
+    fetchProducts();
+  }, []);
 
   return (
     <div className="pb-20 bg-gray-50">
@@ -83,26 +98,40 @@ export default function HomePage() {
         </div>
         
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {DUMMY_PRODUCTS.map(product => (
-             <Link to={`/product/${product.id}`} key={product.id} className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-lg transition cursor-pointer group flex flex-col">
-                <div className="bg-gray-100 aspect-square w-full relative overflow-hidden">
-                    <img src={product.image} alt={product.name} className="object-cover w-full h-full group-hover:scale-105 transition duration-500" />
-                    <div className="absolute top-2 right-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-lg">
-                        {t("product.discount")}
-                    </div>
-                </div>
-                <div className="p-5 flex flex-col flex-1">
-                  <h3 className="font-bold text-gray-900 mb-2 line-clamp-2">{product.name}</h3>
-                  <div className="flex gap-2 items-center mb-4 mt-auto">
-                    <span className="text-lg font-black text-emerald-600">{product.price} {t("product.currency")}</span>
-                    <span className="text-sm text-gray-400 line-through">{product.originalPrice} {t("product.currency")}</span>
+          {loading ? (
+             <div className="col-span-full py-20 text-center text-gray-500">
+                <RefreshCw className="w-10 h-10 animate-spin mx-auto mb-4 text-emerald-500" />
+                <p>جاري تحميل المنتجات...</p>
+             </div>
+          ) : products.length === 0 ? (
+             <div className="col-span-full py-20 text-center bg-white rounded-3xl border border-gray-100 shadow-sm">
+                <Package className="w-12 h-12 text-gray-300 mx-auto mb-4" />
+                <h3 className="text-xl font-bold text-gray-900 mb-2">لا توجد منتجات حالياً</h3>
+                <p className="text-gray-500">يرجى إضافة الجداول في قاعدة بيانات Cloudflare D1 (schema.sql) لتبدأ المنتجات في الظهور.</p>
+             </div>
+          ) : (
+            products.map(product => (
+               <Link to={`/product/${product.id}`} key={product.id} className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-lg transition cursor-pointer group flex flex-col">
+                  <div className="bg-gray-100 aspect-square w-full relative overflow-hidden">
+                      <img src={product.image_url || 'https://via.placeholder.com/400'} alt={product.name} className="object-cover w-full h-full group-hover:scale-105 transition duration-500" />
+                      <div className="absolute top-2 right-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-lg">
+                          {t("product.discount")}
+                      </div>
                   </div>
-                  <button className="w-full bg-emerald-50 hover:bg-emerald-600 hover:text-white text-emerald-700 font-bold py-2 rounded-xl border border-emerald-200 transition">
-                    {t("product.details_btn")}
-                  </button>
-                </div>
-             </Link>
-          ))}
+                  <div className="p-5 flex flex-col flex-1">
+                    <h3 className="font-bold text-gray-900 mb-2 line-clamp-2">{product.name}</h3>
+                    <p className="text-sm text-gray-500 mb-4 line-clamp-2">{product.description}</p>
+                    <div className="flex gap-2 items-center mb-4 mt-auto">
+                      <span className="text-lg font-black text-emerald-600">{product.price} {t("product.currency")}</span>
+                      <span className="text-sm text-gray-400 line-through">{(product.price * 1.5).toFixed(0)} {t("product.currency")}</span>
+                    </div>
+                    <button className="w-full bg-emerald-50 hover:bg-emerald-600 hover:text-white text-emerald-700 font-bold py-2 rounded-xl border border-emerald-200 transition">
+                      {t("product.details_btn")}
+                    </button>
+                  </div>
+               </Link>
+            ))
+          )}
         </div>
       </section>
     </div>

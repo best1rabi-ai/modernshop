@@ -1,6 +1,5 @@
-import React, { useState } from 'react';
-import { Truck, ShieldCheck, CheckCircle2 } from 'lucide-react';
-import { DUMMY_PRODUCTS } from '../data/dummy';
+import React, { useState, useEffect } from 'react';
+import { Truck, ShieldCheck, CheckCircle2, RefreshCw } from 'lucide-react';
 import { useSearchParams, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
@@ -11,7 +10,16 @@ export default function CheckoutPage() {
   const productId = Number(searchParams.get('product')) || 1;
   const quantity = Number(searchParams.get('qty')) || 1;
   
-  const product = DUMMY_PRODUCTS.find(p => p.id === productId) || DUMMY_PRODUCTS[0];
+  const [product, setProduct] = useState<any>(null);
+  const [loadingProduct, setLoadingProduct] = useState(true);
+
+  useEffect(() => {
+      fetch('/api/products').then(res=>res.json()).then(list=> {
+          const found = list.find((p:any) => p.id === productId);
+          setProduct(found);
+          setLoadingProduct(false);
+      }).catch(() => setLoadingProduct(false));
+  }, [productId]);
 
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
@@ -47,6 +55,23 @@ export default function CheckoutPage() {
     
     setLoading(false);
   };
+
+  if (loadingProduct) {
+      return (
+          <div className="min-h-screen flex items-center justify-center bg-gray-50">
+              <RefreshCw className="w-10 h-10 animate-spin text-emerald-500" />
+          </div>
+      );
+  }
+
+  if (!product) {
+       return (
+          <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 text-center">
+              <h1 className="text-3xl font-bold mb-4 text-gray-900">عذراً، المنتج غير متوفر</h1>
+              <Link to="/" className="text-emerald-600 font-bold hover:underline">العودة للرئيسية</Link>
+          </div>
+      );
+  }
 
   if (success) {
       return (
@@ -110,7 +135,7 @@ export default function CheckoutPage() {
                 <h3 className="text-xl font-bold text-gray-900 mb-6 pb-4 border-b border-gray-100">{t("checkout.summary")}</h3>
                 
                 <div className="flex gap-4 mb-6">
-                    <img src={product.image} className="w-20 h-20 rounded-xl object-cover" />
+                    <img src={product.image_url || 'https://via.placeholder.com/150'} className="w-20 h-20 rounded-xl object-cover" />
                     <div>
                         <h4 className="font-bold text-gray-800 line-clamp-2">{product.name}</h4>
                         <div className="text-gray-500 text-sm mt-1">{t("product.qty")} {quantity}</div>

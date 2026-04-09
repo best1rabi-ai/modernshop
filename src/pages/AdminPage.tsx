@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Package, RefreshCw, DollarSign, ShoppingCart, Users, LayoutDashboard, Settings, LogOut, TrendingUp, AlertCircle, MessageCircle, PhoneCall, ChevronDown } from 'lucide-react';
+import { Package, RefreshCw, DollarSign, ShoppingCart, Users, LayoutDashboard, Settings, LogOut, TrendingUp, AlertCircle, MessageCircle, PhoneCall, ChevronDown, Plus, Trash2, Image as ImageIcon } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const STATUS_MAP: Record<string, { label: string, color: string }> = {
@@ -12,27 +12,70 @@ const STATUS_MAP: Record<string, { label: string, color: string }> = {
 
 export default function AdminPage() {
   const [orders, setOrders] = useState<any[]>([]);
+  const [products, setProducts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadingProducts, setLoadingProducts] = useState(true);
   const [updatingId, setUpdatingId] = useState<number | null>(null);
+  
+  // Product Form State
+  const [isProductModalOpen, setProductModalOpen] = useState(false);
+  const [newProduct, setNewProduct] = useState({ name: '', price: '', image_url: '', description: '' });
   
   // نظام التنقل الجانبي
   const [activeTab, setActiveTab] = useState('overview');
 
-  const fetchOrders = async () => {
+  const fetchData = async () => {
     setLoading(true);
+    setLoadingProducts(true);
     try {
-        const res = await fetch('/api/orders');
-        const data = await res.json();
-        setOrders(data);
+        const [ordersRes, productsRes] = await Promise.all([
+           fetch('/api/orders'),
+           fetch('/api/products')
+        ]);
+        
+        const ordersData = await ordersRes.json();
+        const productsData = await productsRes.json();
+        
+        setOrders(ordersData);
+        setProducts(productsData.error ? [] : productsData);
     } catch (e) {
-        console.error("Failed to fetch orders", e);
+        console.error("Failed to fetch data", e);
     }
     setLoading(false);
+    setLoadingProducts(false);
   };
 
   useEffect(() => {
-     fetchOrders();
+     fetchData();
   }, []);
+
+  const handleAddProduct = async (e: React.FormEvent) => {
+      e.preventDefault();
+      try {
+          const res = await fetch('/api/products', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({...newProduct, price: Number(newProduct.price)})
+          });
+          if (res.ok) {
+              setProductModalOpen(false);
+              setNewProduct({ name: '', price: '', image_url: '', description: '' });
+              fetchData();
+          }
+      } catch(e) {
+          alert('فشل إضافة المنتج');
+      }
+  };
+
+  const handleDeleteProduct = async (id: number) => {
+      if(!confirm('هل أنت متأكد من حذف هذا المنتج؟')) return;
+      try {
+          await fetch(`/api/products?id=${id}`, { method: 'DELETE' });
+          fetchData();
+      } catch(e) {
+          alert('فشل الحذف');
+      }
+  };
 
   const updateStatus = async (id: number, newStatus: string) => {
       setUpdatingId(id);
@@ -122,7 +165,7 @@ export default function AdminPage() {
                 </h1>
                 <p className="text-gray-500 mt-1">تحديث اللوحة يتم بشكل فوري وآمن.</p>
              </div>
-             <button onClick={fetchOrders} className="bg-white border border-gray-200 text-gray-700 font-bold py-2.5 px-5 rounded-xl shadow-sm flex items-center gap-2 hover:bg-gray-50 hover:text-emerald-600 transition">
+             <button onClick={fetchData} className="bg-white border border-gray-200 text-gray-700 font-bold py-2.5 px-5 rounded-xl shadow-sm flex items-center gap-2 hover:bg-gray-50 hover:text-emerald-600 transition">
                  <RefreshCw className={`w-5 h-5 ${loading ? 'animate-spin text-emerald-600' : ''}`} /> تحديث البيانات
              </button>
           </div>
@@ -303,8 +346,111 @@ export default function AdminPage() {
               </div>
           )}
 
+          {/* Products Management Tab */}
+          {activeTab === 'products' && (
+              <div className="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
+                 <div className="p-6 border-b border-gray-100 flex flex-wrap gap-4 justify-between items-center bg-gray-50/50">
+                     <h2 className="text-xl font-black text-gray-900 flex items-center gap-2">
+                        <Package className="w-6 h-6 text-emerald-500" /> إدارة مخزون المنتجات
+                     </h2>
+                     <button onClick={() => setProductModalOpen(true)} className="bg-emerald-600 text-white px-5 py-2.5 rounded-xl text-sm font-bold flex items-center gap-2 hover:bg-emerald-700 transition shadow-sm">
+                         <Plus className="w-5 h-5" /> إضافة منتج جديد
+                     </button>
+                 </div>
+                 
+                 <div className="overflow-x-auto">
+                    <table className="w-full text-right border-collapse">
+                        <thead className="bg-gray-50 uppercase text-xs font-black text-gray-500 tracking-wider">
+                            <tr>
+                                <th className="p-4 border-b border-gray-100 w-24">صورة</th>
+                                <th className="p-4 border-b border-gray-100 w-1/3">المنتج</th>
+                                <th className="p-4 border-b border-gray-100">السعر</th>
+                                <th className="p-4 border-b border-gray-100">المخزون الداخلي</th>
+                                <th className="p-4 border-b border-gray-100 w-24">إجراء</th>
+                            </tr>
+                        </thead>
+                        <tbody className="divide-y divide-gray-100">
+                            {loadingProducts ? (
+                                <tr><td colSpan={5} className="text-center p-12 text-gray-500"><RefreshCw className="w-8 h-8 animate-spin mx-auto mb-3 text-emerald-500" /> جاري تحميل قائمة المنتجات...</td></tr>
+                            ) : products.length === 0 ? (
+                                <tr>
+                                    <td colSpan={5} className="text-center p-16">
+                                        <div className="w-20 h-20 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-4">
+                                            <ImageIcon className="w-10 h-10 text-gray-300" />
+                                        </div>
+                                        <h3 className="text-xl font-bold text-gray-900 mb-2">لا توجد أي منتجات</h3>
+                                        <p className="text-gray-500 text-sm">أضف أول منتج لك ليظهر فوراً في واجهة المتجر.</p>
+                                    </td>
+                                </tr>
+                            ) : (
+                                products.map((p: any) => (
+                                    <tr key={p.id} className="hover:bg-gray-50/80 transition group">
+                                        <td className="p-4">
+                                            <div className="w-14 h-14 rounded-xl border border-gray-200 overflow-hidden bg-gray-100">
+                                                <img src={p.image_url || 'https://via.placeholder.com/150'} alt={p.name} className="w-full h-full object-cover" />
+                                            </div>
+                                        </td>
+                                        <td className="p-4">
+                                            <div className="font-bold text-gray-900 text-base">{p.name}</div>
+                                            <div className="text-xs text-gray-500 mt-1 max-w-[300px] truncate">{p.description}</div>
+                                        </td>
+                                        <td className="p-4">
+                                            <div className="font-black text-orange-500 bg-orange-50 inline-block px-3 py-1 rounded-lg">{p.price} د.م</div>
+                                        </td>
+                                        <td className="p-4">
+                                            <span className="bg-emerald-100 text-emerald-700 text-xs font-bold px-2 py-1 rounded-lg">متوفر للبيع</span>
+                                        </td>
+                                        <td className="p-4 text-left">
+                                            <button onClick={() => handleDeleteProduct(p.id)} className="p-2 text-red-500 hover:bg-red-50 rounded-xl transition" title="حذف المنتج">
+                                                <Trash2 className="w-5 h-5" />
+                                            </button>
+                                        </td>
+                                    </tr>
+                                ))
+                            )}
+                        </tbody>
+                    </table>
+                 </div>
+              </div>
+          )}
+
+          {/* Add Product Modal */}
+          {isProductModalOpen && (
+              <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-900/50 backdrop-blur-sm p-4">
+                  <div className="bg-white rounded-3xl w-full max-w-lg shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+                      <div className="p-6 border-b border-gray-100 flex justify-between items-center bg-gray-50/50">
+                          <h3 className="text-xl font-black text-gray-900">إضافة منتج جديد</h3>
+                          <button onClick={() => setProductModalOpen(false)} className="text-gray-400 hover:text-gray-900 font-bold text-2xl leading-none">&times;</button>
+                      </div>
+                      <form onSubmit={handleAddProduct} className="p-6 space-y-4">
+                          <div>
+                              <label className="block text-sm font-bold text-gray-700 mb-1">اسم المنتج</label>
+                              <input required type="text" value={newProduct.name} onChange={e=>setNewProduct({...newProduct, name: e.target.value})} className="w-full border border-gray-200 rounded-xl px-4 py-2.5 outline-none focus:ring-2 focus:ring-emerald-500" placeholder="مثال: حذاء رياضي أصلي" />
+                          </div>
+                          <div>
+                              <label className="block text-sm font-bold text-gray-700 mb-1">سعر المنتج (بالدرهم)</label>
+                              <input required type="number" value={newProduct.price} onChange={e=>setNewProduct({...newProduct, price: e.target.value})} className="w-full border border-gray-200 rounded-xl px-4 py-2.5 outline-none focus:ring-2 focus:ring-emerald-500" placeholder="مثال: 250" />
+                          </div>
+                          <div>
+                              <label className="block text-sm font-bold text-gray-700 mb-1">رابط الصورة (URL)</label>
+                              <input required type="url" value={newProduct.image_url} onChange={e=>setNewProduct({...newProduct, image_url: e.target.value})} className="w-full border border-gray-200 rounded-xl px-4 py-2.5 outline-none focus:ring-2 focus:ring-emerald-500" dir="ltr" placeholder="https://..." />
+                              <p className="text-xs text-gray-400 mt-1">قم بنسخ رابط الصورة من متصفحك ولصقه هنا.</p>
+                          </div>
+                          <div>
+                              <label className="block text-sm font-bold text-gray-700 mb-1">وصف قصير</label>
+                              <textarea value={newProduct.description} onChange={e=>setNewProduct({...newProduct, description: e.target.value})} className="w-full border border-gray-200 rounded-xl px-4 py-2.5 outline-none focus:ring-2 focus:ring-emerald-500 h-24 resize-none" placeholder="اكتب ميزات المنتج هنا..."></textarea>
+                          </div>
+                          <div className="pt-2 flex gap-3">
+                              <button type="submit" className="flex-1 bg-emerald-600 text-white font-bold py-3 rounded-xl hover:bg-emerald-700 transition">نشر في المتجر</button>
+                              <button type="button" onClick={() => setProductModalOpen(false)} className="flex-1 bg-gray-100 text-gray-700 font-bold py-3 rounded-xl hover:bg-gray-200 transition">إلغاء</button>
+                          </div>
+                      </form>
+                  </div>
+              </div>
+          )}
+
           {/* Under Construction placeholders */}
-          {['products', 'crm', 'settings'].includes(activeTab) && (
+          {['crm', 'settings'].includes(activeTab) && (
               <div className="bg-white rounded-3xl p-12 text-center border border-gray-100 shadow-sm mt-8">
                   <div className="w-24 h-24 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-6">
                       <Settings className="w-12 h-12 text-gray-300 animate-spin-slow" />
