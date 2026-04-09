@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>متجري - الدفع عند الاستلام في المغرب</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-gray-50">
+
+    <!-- شريط الإعلانات -->
+    <div class="bg-emerald-700 text-white text-center py-2 text-sm font-bold">
+        🚚 توصيل مجاني سريع لجميع مدن المغرب + الدفع عند الاستلام
+    </div>
+
+    <!-- الهيدر -->
+    <header class="bg-white shadow-sm sticky top-0 z-50 px-4 py-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <div class="text-2xl font-black text-emerald-800 tracking-tighter">MATJARI<span class="text-orange-500">.MA</span></div>
+            <a href="#order-form" class="bg-orange-500 text-white px-6 py-2 rounded-full font-bold shadow-lg hover:bg-orange-600 transition">اطلب الآن</a>
+        </div>
+    </header>
+
+    <!-- عرض المنتج الرئيسي -->
+    <section class="container mx-auto px-4 py-10">
+        <div class="grid lg:grid-cols-2 gap-10 items-start">
+            
+            <!-- صور المنتج -->
+            <div class="bg-white p-4 rounded-3xl shadow-sm border border-gray-100">
+                <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=800" class="rounded-2xl w-full h-auto object-cover mb-4" alt="Product Name">
+                <div class="grid grid-cols-4 gap-2">
+                    <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=200" class="rounded-lg border-2 border-emerald-500">
+                    <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=200" class="rounded-lg opacity-50">
+                    <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=200" class="rounded-lg opacity-50">
+                    <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=200" class="rounded-lg opacity-50">
+                </div>
+            </div>
+
+            <!-- معلومات المنتج والطلب -->
+            <div class="space-y-6">
+                <div class="flex items-center gap-2 text-orange-500 font-bold">
+                    <span>⭐⭐⭐⭐⭐</span>
+                    <span class="text-gray-400 text-sm">(48 زبون قام بالتقييم)</span>
+                </div>
+                <h1 class="text-4xl font-black text-gray-900 leading-tight">ساعة الرفاهية الذكية - الإصدار الذهبي المحدود</h1>
+                <div class="flex items-center gap-4">
+                    <span class="text-4xl font-bold text-emerald-700">349 د.م</span>
+                    <span class="text-xl text-gray-400 line-through">599 د.م</span>
+                </div>
+
+                <!-- مميزات سريعة -->
+                <div class="grid grid-cols-1 gap-3 bg-emerald-50 p-6 rounded-2xl border border-emerald-100">
+                    <div class="flex items-center gap-3">
+                        <span class="text-xl text-emerald-600">🚚</span>
+                        <p class="font-bold text-emerald-900">توصيل مجاني فابور لجميع المدن المغربية</p>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <span class="text-xl text-emerald-600">🤝</span>
+                        <p class="font-bold text-emerald-900">الدفع حتى توصلك السلعة ليدك وتشوفها</p>
+                    </div>
+                </div>
+
+                <!-- استمارة الطلب السريع -->
+                <div id="order-form" class="bg-white p-8 rounded-3xl shadow-xl border-2 border-emerald-500 relative">
+                    <div class="absolute -top-4 right-10 bg-emerald-500 text-white px-4 py-1 rounded-full text-sm font-bold">الطلب سريع جداً 👇</div>
+                    <h3 class="text-xl font-black mb-6">أدخل معلوماتك للطلب:</h3>
+                    
+                    <form id="purchase-form" class="space-y-4">
+                        <input type="text" id="name" placeholder="الاسم الكامل" required class="w-full p-4 bg-gray-50 border-none rounded-xl outline-none focus:ring-2 focus:ring-emerald-500 transition">
+                        <input type="tel" id="phone" placeholder="رقم الهاتف (06/07...)" required class="w-full p-4 bg-gray-50 border-none rounded-xl outline-none focus:ring-2 focus:ring-emerald-500 text-left" dir="ltr">
+                        <select id="city" required class="w-full p-4 bg-gray-50 border-none rounded-xl outline-none focus:ring-2 focus:ring-emerald-500">
+                            <option value="">اختر مدينتك</option>
+                            <option>الدار البيضاء</option>
+                            <option>الرباط / سلا</option>
+                            <option>مراكش</option>
+                            <option>طنجة / تطوان</option>
+                            <option>أكادير</option>
+                            <option>فاس / مكناس</option>
+                            <option>القنيطرة / تمارة</option>
+                        </select>
+                        <button type="submit" class="w-full bg-orange-500 text-white py-5 rounded-2xl text-xl font-black shadow-lg hover:bg-orange-600 transition animate-pulse">
+                            تأكيد الطلب الآن 🇲🇦
+                        </button>
+                    </form>
+                    <p class="text-center text-xs text-gray-400 mt-4">✓ سنقوم بالاتصال بكم لتأكيد الطلب</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- زر واتساب عائم -->
+    <a href="https://wa.me/212600000000" class="fixed bottom-6 right-6 bg-green-500 text-white p-4 rounded-full shadow-2xl z-50">
+        <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.588-5.946 0-6.556 5.332-11.891 11.893-11.891 3.181 0 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414 0 6.556-5.332 11.892-11.893 11.892-1.997 0-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884 0 2.225.569 3.808 1.694 5.384l-.993 3.634 3.788-.987z"/></svg>
+    </a>
+
+    <script src="script.js"></script>
+</body>
+</html>
