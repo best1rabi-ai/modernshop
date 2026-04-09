@@ -1,8 +1,0 @@
-name = "modernshop"
-compatibility_date = "2024-04-09"
-pages_build_output_dir = "."
-
-[[d1_databases]]
-binding = "DB"
-database_name = "modernshop-db"
-database_id = "0611398c-2115-44ce-8c38-a6b871a87096"
