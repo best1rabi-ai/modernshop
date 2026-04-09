@@ -10,33 +10,55 @@ export default function HomePage() {
   return (
     <div className="pb-20 bg-gray-50">
       {/* Hero Section */}
-      <section className="bg-emerald-50 py-16 lg:py-24 border-b border-emerald-100">
-        <div className="container mx-auto px-4 text-center max-w-4xl">
-          <h1 className="text-4xl lg:text-6xl font-black text-emerald-900 mb-6 leading-tight">
-            {t("home.hero.title")} <br/><span className="text-orange-500 text-5xl lg:text-7xl">{t("home.hero.highlight")}</span>
-          </h1>
-          <p className="text-lg text-gray-600 mb-10">
-            {t("home.hero.desc")}
-          </p>
-          <a href="#products" className="inline-block bg-orange-500 text-white px-10 py-5 rounded-full text-xl font-bold shadow-xl shadow-orange-500/30 hover:bg-orange-600 hover:scale-105 transition-all duration-300">
-            {t("home.hero.btn")}
-          </a>
-          
-          <div className="relative max-w-4xl mx-auto mt-16 mt-8 lg:mt-16 group cursor-pointer">
-             <div className="absolute inset-0 bg-gradient-to-r from-emerald-500 to-orange-500 blur-3xl opacity-20 rounded-full translate-y-12 group-hover:opacity-30 transition duration-500"></div>
-             <img 
-               src="https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?w=1200&q=80" 
-               alt="Shopping cart and gifts" 
-               className="relative z-10 w-full rounded-[2rem] shadow-2xl border-4 border-white transform group-hover:-translate-y-2 transition duration-500 object-cover max-h-[400px]" 
-             />
-             <div className="absolute -left-6 -bottom-6 w-24 h-24 bg-orange-100 rounded-full flex items-center justify-center -z-10 animate-bounce" style={{ animationDuration: '3s' }}></div>
-             <div className="absolute -right-4 -top-8 w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center -z-10 animate-bounce" style={{ animationDuration: '4s' }}></div>
+      <section className="bg-emerald-50 pt-12 pb-20 lg:pt-20 lg:pb-32 border-b border-emerald-100 overflow-hidden relative">
+        {/* Background elements */}
+        <div className="absolute top-0 right-0 -mr-20 -mt-20 w-64 h-64 rounded-full bg-orange-200 opacity-50 blur-3xl"></div>
+        <div className="absolute bottom-0 left-0 -ml-20 -mb-20 w-80 h-80 rounded-full bg-emerald-200 opacity-50 blur-3xl"></div>
+
+        <div className="container mx-auto px-4 max-w-6xl relative z-10">
+          <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
+            
+            {/* Text Content */}
+            <div className="flex-1 text-center lg:text-start lg:rtl:text-right lg:ltr:text-left">
+              <h1 className="text-4xl lg:text-6xl xl:text-7xl font-black text-emerald-900 mb-6 leading-tight">
+                {t("home.hero.title")} <br/>
+                <span className="text-orange-500 inline-block mt-2">{t("home.hero.highlight")}</span>
+              </h1>
+              <p className="text-lg text-gray-600 mb-10 max-w-xl mx-auto lg:mx-0 leading-relaxed">
+                {t("home.hero.desc")}
+              </p>
+              <a href="#products" className="inline-block bg-orange-500 text-white px-10 py-5 rounded-full text-xl font-bold shadow-xl shadow-orange-500/30 hover:bg-orange-600 hover:-translate-y-1 transition-all duration-300">
+                {t("home.hero.btn")}
+              </a>
+            </div>
+
+            {/* Image */}
+            <div className="flex-1 relative w-full max-w-md lg:max-w-full mx-auto">
+               <div className="absolute inset-0 bg-gradient-to-tr from-emerald-400 to-orange-400 blur-3xl opacity-20 rounded-full"></div>
+               <img 
+                 src="https://images.unsplash.com/photo-1607082349566-187342175e2f?w=1000&auto=format&fit=crop&q=80" 
+                 alt="Modern E-commerce" 
+                 className="relative z-10 w-full rounded-3xl shadow-2xl border-8 border-white transform hover:scale-[1.02] hover:-rotate-2 transition duration-500 object-cover aspect-square lg:aspect-[4/3]" 
+               />
+               
+               {/* Floating Badge */}
+               <div className="absolute -left-6 bottom-10 bg-white p-4 rounded-2xl shadow-xl z-20 flex items-center gap-4 animate-bounce rtl:right-10 rtl:left-auto ltr:right-auto ltr:left-10" style={{ animationDuration: '3s' }}>
+                  <div className="bg-emerald-100 p-3 rounded-full text-emerald-600">
+                    <ShieldCheck className="w-8 h-8" />
+                  </div>
+                  <div>
+                      <div className="font-black text-gray-900">تسوق آمن</div>
+                      <div className="text-xs text-gray-500">مضمون 100%</div>
+                  </div>
+               </div>
+            </div>
+            
           </div>
         </div>
       </section>
 
       {/* Trust Features */}
-      <section className="py-12 container mx-auto px-4 -mt-16 lg:-mt-24 relative z-20 w-full max-w-6xl">
+      <section className="py-12 container mx-auto px-4 -mt-10 lg:-mt-16 relative z-20 w-full max-w-6xl">
         <div className="bg-white rounded-3xl shadow-xl border border-gray-100 p-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           <div className="flex flex-col items-center text-center space-y-3">
             <div className="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center">
