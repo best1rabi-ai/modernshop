@@ -13,8 +13,12 @@ export default function ProductDetailsPage() {
 
   useEffect(() => {
       fetch('/api/products').then(res=>res.json()).then(list=> {
-          const found = list.find((p:any) => p.id === Number(id));
-          setProduct(found);
+          if (Array.isArray(list)) {
+              const found = list.find((p:any) => p.id === Number(id));
+              setProduct(found);
+          } else {
+              setProduct(null);
+          }
           setLoading(false);
       }).catch(() => setLoading(false));
   }, [id]);

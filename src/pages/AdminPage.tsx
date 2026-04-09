@@ -36,8 +36,8 @@ export default function AdminPage() {
         const ordersData = await ordersRes.json();
         const productsData = await productsRes.json();
         
-        setOrders(ordersData);
-        setProducts(productsData.error ? [] : productsData);
+        setOrders(Array.isArray(ordersData) ? ordersData : []);
+        setProducts(Array.isArray(productsData) ? productsData : []);
     } catch (e) {
         console.error("Failed to fetch data", e);
     }

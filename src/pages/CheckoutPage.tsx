@@ -15,8 +15,12 @@ export default function CheckoutPage() {
 
   useEffect(() => {
       fetch('/api/products').then(res=>res.json()).then(list=> {
-          const found = list.find((p:any) => p.id === productId);
-          setProduct(found);
+          if (Array.isArray(list)) {
+              const found = list.find((p:any) => p.id === productId);
+              setProduct(found);
+          } else {
+              setProduct(null);
+          }
           setLoadingProduct(false);
       }).catch(() => setLoadingProduct(false));
   }, [productId]);

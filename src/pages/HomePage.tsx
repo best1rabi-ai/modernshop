@@ -13,9 +13,10 @@ export default function HomePage() {
       try {
         const res = await fetch('/api/products');
         const data = await res.json();
-        setProducts(data);
+        setProducts(Array.isArray(data) ? data : []);
       } catch (e) {
         console.error("Failed to fetch products", e);
+        setProducts([]);
       }
       setLoading(false);
     };
